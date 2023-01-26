@@ -12,9 +12,14 @@ const postNewUser = async (req, res) => {
 
     const jwtSecretKey = JWT_SECRET_KEY;
     const user = await registerUser(req.body);
-    const token = jwt.sign(user.toJSON(), jwtSecretKey);
+    const accessToken = jwt.sign(user.toJSON(), jwtSecretKey, {
+      expiresIn: 60 * 60 * 10,
+    });
+    const refreshToken = jwt.sign(user.toJSON(), jwtSecretKey, {
+      expiresIn: 60 * 60 * 15,
+    });
 
-    res.status(201).json({ jwt: token });
+    res.status(201).json({ accessToken: accessToken, refreshToken });
   } catch (error) {
     res.status(500).send(error);
     console.log(error);
