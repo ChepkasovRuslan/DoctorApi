@@ -3,6 +3,7 @@ const {
   getUserById,
   registerUser,
   deleteAllUsers,
+  deleteUserById,
 } = require("../services/user.service");
 const { validationResult } = require("express-validator");
 const { JWT_SECRET_KEY } = require("../../config");
@@ -63,9 +64,21 @@ const deleteUsers = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    const deletedUser = await deleteUserById(req.params.id);
+
+    if (deletedUser) res.status(202).send(deletedUser);
+    else res.status(404).json({ msg: "User not found" });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 module.exports = {
   getUsers,
   getUser,
   postNewUser,
   deleteUsers,
+  deleteUser,
 };
