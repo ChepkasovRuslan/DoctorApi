@@ -1,4 +1,8 @@
-const { getAllUsers, registerUser } = require("../services/user.service");
+const {
+  getAllUsers,
+  getUserById,
+  registerUser,
+} = require("../services/user.service");
 const { validationResult } = require("express-validator");
 const { JWT_SECRET_KEY } = require("../../config");
 const jwt = require("jsonwebtoken");
@@ -8,7 +12,18 @@ const getUsers = async (req, res) => {
     const users = await getAllUsers();
 
     if (users.length) res.status(200).send(users);
-    else res.status(404).send("Users not found");
+    else res.status(404).send({ msg: "Users not found" });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+const getUser = async (req, res) => {
+  try {
+    const user = await getUserById(req.params.id);
+
+    if (user) res.status(200).send(user);
+    else res.status(404).json({ msg: "User not found" });
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -38,5 +53,6 @@ const postNewUser = async (req, res) => {
 
 module.exports = {
   getUsers,
+  getUser,
   postNewUser,
 };
