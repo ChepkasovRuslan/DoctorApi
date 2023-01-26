@@ -10,10 +10,6 @@ const userSchema = new Schema({
     type: String,
     require: true,
   },
-  token: {
-    type: String,
-    require: true,
-  },
 });
 
-module.exports = User = mongoose.model("users", userSchema);
+module.exports = User = mongoose.model("user", userSchema);

@@ -6,8 +6,9 @@ const recordSchema = new Schema({
     type: String,
     required: true,
   },
-  doctorFullName: {
-    type: String,
+  doctor: {
+    type: Schema.Types.ObjectId,
+    ref: "Doctor",
     required: true,
   },
   receptionDate: {
@@ -20,4 +21,4 @@ const recordSchema = new Schema({
   },
 });
 
-module.exports = Record = mongoose.model("records", recordSchema);
+module.exports = Record = mongoose.model("record", recordSchema);
