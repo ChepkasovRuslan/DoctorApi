@@ -7,10 +7,12 @@ const {
   getUsers,
   getUser,
   postNewUser,
+  deleteUsers,
 } = require("../controllers/user.controller");
 
 router.get("/users", getUsers);
 router.get("/users/:id", getUser);
-router.post("/reg", userValidation, postNewUser);
+router.post("/users/reg", userValidation, postNewUser);
+router.delete("/users", deleteUsers);
 
 module.exports = router;
