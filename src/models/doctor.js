@@ -8,4 +8,12 @@ const doctorSchema = new Schema({
   },
 });
 
-module.exports = User = mongoose.model("doctor", userSchema);
+doctorSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: (doc, ret) => {
+    delete ret._id;
+  },
+});
+
+module.exports = User = mongoose.model("doctor", doctorSchema);
