@@ -21,4 +21,12 @@ const recordSchema = new Schema({
   },
 });
 
+recordSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: (doc, ret) => {
+    delete ret._id;
+  },
+});
+
 module.exports = Record = mongoose.model("record", recordSchema);
