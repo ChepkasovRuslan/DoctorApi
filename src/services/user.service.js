@@ -13,9 +13,12 @@ const registerUser = async (body) => {
 
 const deleteAllUsers = async () => await User.deleteMany({});
 
+const deleteUserById = async (id) => await User.findByIdAndDelete(id);
+
 module.exports = {
   getAllUsers,
   getUserById,
   registerUser,
   deleteAllUsers,
+  deleteUserById,
 };
