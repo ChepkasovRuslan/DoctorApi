@@ -3,10 +3,11 @@ const express = require("express");
 const userRouter = express.Router();
 
 const userCtrl = require("../controllers/user.controller");
+const { idValidation } = require("../middlewares/validators/id.validation");
 
 userRouter.get("/users", userCtrl.getUsers);
-userRouter.get("/users/id/:id", userCtrl.getUser);
+userRouter.get("/user/:id", idValidation, userCtrl.getUser);
 userRouter.delete("/users", userCtrl.deleteUsers);
-userRouter.delete("/users/id/:id", userCtrl.deleteUser);
+userRouter.delete("/user/:id", userCtrl.deleteUser);
 
 module.exports = userRouter;

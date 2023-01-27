@@ -4,26 +4,33 @@ const {
   deleteAllUsers,
   deleteUserById,
 } = require("../services/user.service");
+const { validationResult } = require("express-validator");
+const { logError } = require("../services/logger.service");
 
 const getUsers = async (req, res) => {
   try {
     const users = await getAllUsers();
 
-    if (users.length) res.status(200).send(users);
-    else res.status(404).json({ msg: "Users not found" });
+    res.status(200).send(users);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ msg: "Internal server error" });
+    logError(error.message);
   }
 };
 
 const getUser = async (req, res) => {
   try {
-    const user = await getUserById(req.params.id);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
+    const user = await getUserById(req.params.id);
     if (user) res.status(200).send(user);
     else res.status(404).json({ msg: "User not found" });
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ msg: "Internal server error" });
+    logError(error.message);
   }
 };
 
@@ -31,10 +38,10 @@ const deleteUsers = async (req, res) => {
   try {
     const deletedUsers = await deleteAllUsers();
 
-    if (deletedUsers.deletedCount) res.status(202).send(deletedUsers);
-    else res.status(404).json({ msg: "Users not found" });
+    res.status(202).send(deletedUsers);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ msg: "Internal server error" });
+    logError(error.message);
   }
 };
 
@@ -45,7 +52,8 @@ const deleteUser = async (req, res) => {
     if (deletedUser) res.status(202).send(deletedUser);
     else res.status(404).json({ msg: "User not found" });
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ msg: "Internal server error" });
+    logError(error.message);
   }
 };
 
