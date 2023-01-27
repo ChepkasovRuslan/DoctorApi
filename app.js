@@ -3,7 +3,8 @@ const { PORT, DB_CONNECTION } = require("./config");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const apiRoutes = require("./src/routes/user.routes");
+const userRoutes = require("./src/routes/user.routes");
+const authRoutes = require("./src/routes/auth.routes");
 
 const app = express();
 
@@ -13,7 +14,7 @@ const loadApp = async () => {
 
     app.use(express.json());
     app.use(cors());
-    app.use("/", apiRoutes);
+    app.use("/", userRoutes, authRoutes);
 
     await mongoose.connect(DB_CONNECTION, {
       useNewUrlParser: true,

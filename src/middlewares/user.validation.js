@@ -1,19 +1,9 @@
 const { check } = require("express-validator");
-const User = require("../models/user");
 
 const userValidation = [
   check("login")
     .exists()
     .withMessage(`Object must contain "login" field`)
-    .custom(async (value) => {
-      const users = await User.find({ login: value });
-      if (users.length <= 0) {
-        return Promise.resolve();
-      }
-
-      return Promise.reject();
-    })
-    .withMessage("Login already exists")
     .isString()
     .withMessage("Login must be a string")
     .isLength({ min: 6, max: 50 })
