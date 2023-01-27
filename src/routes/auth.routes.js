@@ -3,7 +3,7 @@ const { userValidation } = require("../middlewares/user.validation");
 
 const authRouter = express.Router();
 
-const authCtrl = require("../controllers/user.controller");
+const authCtrl = require("../controllers/auth.controller");
 
 authRouter.get("/auth/login", authCtrl.authorizeUser);
 authRouter.post("/auth/registration", userValidation, authCtrl.postNewUser);

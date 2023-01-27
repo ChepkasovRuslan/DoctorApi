@@ -16,4 +16,4 @@ doctorSchema.set("toJSON", {
   },
 });
 
-module.exports = User = mongoose.model("doctor", doctorSchema);
+module.exports = Doctor = mongoose.model("doctor", doctorSchema);
