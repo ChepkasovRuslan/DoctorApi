@@ -1,6 +1,6 @@
 const User = require("../models/user");
 
-const getAllUsers = async () => await User.find();
+const getAllUsers = async () => await User.find().limit(10).sort("login");
 
 const getUserById = async (id) => await User.findById(id);
 

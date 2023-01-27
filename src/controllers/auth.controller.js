@@ -2,12 +2,12 @@ const {
   checkExistingUser,
   getUserByLogin,
   registerUser,
+  generateTokens,
 } = require("../services/auth.service");
 const { validationResult } = require("express-validator");
-const { JWT_SECRET_KEY } = require("../../config");
-const jwt = require("jsonwebtoken");
+const { logError } = require("../services/logger.service");
 
-const postNewUser = async (req, res) => {
+const registerNewUser = async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -18,18 +18,16 @@ const postNewUser = async (req, res) => {
       return res.status(409).json({ msg: "Login already exists" });
     }
 
-    const jwtSecretKey = JWT_SECRET_KEY;
     const user = await registerUser(req.body);
-    const accessToken = jwt.sign(user.toJSON(), jwtSecretKey, {
-      expiresIn: 60 * 60 * 10,
-    });
-    const refreshToken = jwt.sign(user.toJSON(), jwtSecretKey, {
-      expiresIn: 60 * 60 * 15,
-    });
 
-    res.status(201).json({ accessToken: accessToken, refreshToken });
+    const tokens = generateTokens(user);
+    res.status(201).json({
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    });
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ msg: "Internal server error" });
+    logError(error.message);
   }
 };
 
@@ -41,17 +39,24 @@ const authorizeUser = async (req, res) => {
       user.comparePassword(req.body.password, (err, isMatch) => {
         if (err) throw err;
 
+        const tokens = generateTokens(user);
+
         isMatch
-          ? res.status(200).json({ login: user.login })
+          ? res.status(200).json({
+              login: user.login,
+              accessToken: tokens.accessToken,
+              refreshToken: tokens.refreshToken,
+            })
           : res.status(403).json({ msg: "Invalid password" });
       });
     } else res.status(404).json({ msg: "User not found" });
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ msg: "Internal server error" });
+    logError(error.message);
   }
 };
 
 module.exports = {
-  postNewUser,
+  registerNewUser,
   authorizeUser,
 };

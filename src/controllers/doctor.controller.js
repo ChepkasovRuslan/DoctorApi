@@ -7,15 +7,16 @@ const {
   deleteDoctorById,
 } = require("../services/doctor.service");
 const { validationResult } = require("express-validator");
+const { logError } = require("../services/logger.service");
 
 const getDoctors = async (req, res) => {
   try {
     const doctors = await getAllDoctors();
 
-    if (doctors.length) res.status(200).send(doctors);
-    else res.status(404).json({ msg: "Doctors not found" });
+    res.status(200).send(doctors);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ msg: "Internal server error" });
+    logError(error.message);
   }
 };
 
@@ -26,7 +27,8 @@ const getDoctor = async (req, res) => {
     if (user) res.status(200).send(user);
     else res.status(404).json({ msg: "Doctor not found" });
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ msg: "Internal server error" });
+    logError(error.message);
   }
 };
 
@@ -41,7 +43,8 @@ const postDoctor = async (req, res) => {
 
     res.status(201).send(doctor);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ msg: "Internal server error" });
+    logError(error.message);
   }
 };
 
@@ -56,7 +59,8 @@ const patchDoctor = async (req, res) => {
 
     res.status(201).send(patchedDoctor);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ msg: "Internal server error" });
+    logError(error.message);
   }
 };
 
@@ -67,7 +71,8 @@ const deleteDoctors = async (req, res) => {
     if (deletedDoctors.deletedCount) res.status(202).send(deletedDoctors);
     else res.status(404).json({ msg: "Doctors not found" });
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ msg: "Internal server error" });
+    logError(error.message);
   }
 };
 
@@ -78,7 +83,8 @@ const deleteDoctor = async (req, res) => {
     if (deletedDoctor) res.status(202).send(deletedDoctor);
     else res.status(404).json({ msg: "Doctor not found" });
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ msg: "Internal server error" });
+    logError(error.message);
   }
 };
 
