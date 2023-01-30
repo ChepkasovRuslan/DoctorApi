@@ -1,4 +1,5 @@
 const {
+  countUsers,
   getAllUsers,
   getUserById,
   deleteAllUsers,
@@ -9,9 +10,16 @@ const { logError } = require("../services/logger.service");
 
 const getUsers = async (req, res) => {
   try {
-    const users = await getAllUsers();
+    const users = await getAllUsers(req.query.pageSize, req.query.page);
+    const total = await countUsers();
 
-    res.status(200).send(users);
+    res.status(200).json({
+      content: users,
+      page: req.query.page,
+      pageSize: req.query.pageSize,
+      elementsOnPage: users.length,
+      totalCountOfElements: total,
+    });
   } catch (error) {
     res.status(500).json({ msg: "Internal server error" });
     logError(error.message);
