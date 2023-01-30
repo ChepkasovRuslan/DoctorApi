@@ -3,14 +3,35 @@ const recordCtrl = require("../controllers/record.controller");
 const {
   recordValidation,
 } = require("../middlewares/validators/record.validation");
+const {
+  accessTokenValidation,
+} = require("../middlewares/validators/token.validation");
 
 const recordRouter = express.Router();
 
-recordRouter.get("/records", recordCtrl.getRecords);
-recordRouter.get("/record/:id", recordCtrl.getRecord);
-recordRouter.post("/record", recordValidation, recordCtrl.postRecord);
-recordRouter.patch("/record/:id", recordValidation, recordCtrl.patchRecord);
-recordRouter.delete("/records", recordCtrl.deleteRecords);
-recordRouter.delete("/record/:id", recordCtrl.deleteRecord);
+recordRouter.get("/records", accessTokenValidation, recordCtrl.getRecords);
+recordRouter.get("/record/:id", accessTokenValidation, recordCtrl.getRecord);
+recordRouter.post(
+  "/record",
+  recordValidation,
+  accessTokenValidation,
+  recordCtrl.postRecord
+);
+recordRouter.patch(
+  "/record/:id",
+  recordValidation,
+  accessTokenValidation,
+  recordCtrl.patchRecord
+);
+recordRouter.delete(
+  "/records",
+  accessTokenValidation,
+  recordCtrl.deleteRecords
+);
+recordRouter.delete(
+  "/record/:id",
+  accessTokenValidation,
+  recordCtrl.deleteRecord
+);
 
 module.exports = recordRouter;

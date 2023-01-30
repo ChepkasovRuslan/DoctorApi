@@ -13,6 +13,11 @@ const { logError } = require("../services/logger.service");
 
 const getRecords = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const records = await getAllRecords(
       req.query.pageSize,
       req.query.page,
@@ -37,7 +42,13 @@ const getRecords = async (req, res) => {
 
 const getRecord = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const record = await getRecordById(req.params.id);
+    console.log(record);
 
     if (record) res.status(200).send(record);
     else res.status(404).json({ msg: "Record not found" });
@@ -89,6 +100,11 @@ const patchRecord = async (req, res) => {
 
 const deleteRecords = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const deletedRecords = await deleteAllRecords();
 
     if (deletedRecords.deletedCount) res.status(202).send(deletedRecords);
@@ -101,6 +117,11 @@ const deleteRecords = async (req, res) => {
 
 const deleteRecord = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const deletedRecord = await deleteRecordById(req.params.id);
 
     if (deletedRecord) res.status(202).send(deletedRecord);
