@@ -10,6 +10,7 @@ const getAllRecords = async (pageSize, page, sortField) =>
     .limit(pageSize)
     .skip((page - 1) * pageSize)
     .sort(sortField);
+
 const countRecords = async () => await Record.count();
 
 const getRecordById = async (id) => await Record.findById(id);

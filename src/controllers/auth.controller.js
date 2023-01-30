@@ -2,8 +2,8 @@ const {
   checkExistingUser,
   getUserByLogin,
   registerUser,
-  generateTokens,
 } = require("../services/auth.service");
+const { generateTokens } = require("../services/token.service");
 const { validationResult } = require("express-validator");
 const { logError } = require("../services/logger.service");
 
@@ -11,7 +11,7 @@ const registerNewUser = async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(401).json({ errors: errors.array() });
     }
 
     if (await checkExistingUser(req.body.login)) {
@@ -20,7 +20,7 @@ const registerNewUser = async (req, res) => {
 
     const user = await registerUser(req.body);
 
-    const tokens = generateTokens(user);
+    const tokens = generateTokens(user.id);
     res.status(201).json({
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
@@ -39,7 +39,7 @@ const authorizeUser = async (req, res) => {
       user.comparePassword(req.body.password, (err, isMatch) => {
         if (err) throw err;
 
-        const tokens = generateTokens(user);
+        const tokens = generateTokens(user.id);
 
         isMatch
           ? res.status(200).json({
