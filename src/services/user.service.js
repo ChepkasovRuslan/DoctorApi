@@ -7,6 +7,7 @@ const getAllUsers = async (pageSize, page) =>
     .sort("login");
 
 const countUsers = async () => await User.count();
+
 const getUserById = async (id) => await User.findById(id);
 
 const deleteAllUsers = async () => await User.deleteMany({});

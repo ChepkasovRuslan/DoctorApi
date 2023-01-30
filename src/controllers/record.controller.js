@@ -1,5 +1,6 @@
 const {
   getAllRecords,
+  countRecords,
   getRecordById,
   createRecord,
   updateRecordById,
@@ -12,10 +13,22 @@ const { logError } = require("../services/logger.service");
 
 const getRecords = async (req, res) => {
   try {
-    const records = await getAllRecords();
+    const records = await getAllRecords(
+      req.query.pageSize,
+      req.query.page,
+      req.query.sort,
+      req.query.startDate,
+      req.query.endDate
+    );
+    const total = await countRecords();
 
-    if (records.length) res.status(200).send(records);
-    else res.status(404).json({ msg: "Records not found" });
+    res.status(200).json({
+      content: records,
+      page: req.query.page,
+      pageSize: req.query.pageSize,
+      elementsOnPage: records.length,
+      totalCountOfElements: total,
+    });
   } catch (error) {
     res.status(500).json({ msg: "Internal server error" });
     logError(error.message);
