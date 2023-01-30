@@ -1,7 +1,16 @@
 const Record = require("../models/record");
+const Doctor = require("../models/doctor");
 
-const getAllRecords = async () =>
-  await Record.find().limit(10).sort("receptionDate");
+const getAllRecords = async (pageSize, page, sortField) =>
+  await Record.find()
+    .populate({
+      path: "doctor",
+      model: Doctor,
+    })
+    .limit(pageSize)
+    .skip((page - 1) * pageSize)
+    .sort(sortField);
+const countRecords = async () => await Record.count();
 
 const getRecordById = async (id) => await Record.findById(id);
 
@@ -23,6 +32,7 @@ const deleteRecordById = async (id) => await Record.findByIdAndDelete(id);
 
 module.exports = {
   getAllRecords,
+  countRecords,
   getRecordById,
   createRecord,
   updateRecordById,
