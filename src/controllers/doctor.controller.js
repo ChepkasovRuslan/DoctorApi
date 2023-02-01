@@ -8,13 +8,11 @@ const {
 } = require("../services/doctor.service");
 const { validationResult } = require("express-validator");
 const { logError } = require("../services/logger.service");
+const { checkErrors } = require("../services/error.service");
 
 const getDoctors = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    checkErrors(validationResult(req), res);
 
     const doctors = await getAllDoctors();
 

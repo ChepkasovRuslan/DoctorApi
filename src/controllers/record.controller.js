@@ -10,13 +10,11 @@ const {
 const { checkDoctorExists } = require("../services/doctor.service");
 const { validationResult } = require("express-validator");
 const { logError } = require("../services/logger.service");
+const { checkErrors } = require("../services/error.service");
 
 const getRecords = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    checkErrors(validationResult(req), res);
 
     const records = await getAllRecords(
       req.query.pageSize,
@@ -42,10 +40,7 @@ const getRecords = async (req, res) => {
 
 const getRecord = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    checkErrors(validationResult(req), res);
 
     const record = await getRecordById(req.params.id);
     console.log(record);
@@ -60,10 +55,7 @@ const getRecord = async (req, res) => {
 
 const postRecord = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    checkErrors(validationResult(req), res);
 
     if (!(await checkDoctorExists(req.body.doctor))) {
       return res.status(404).json({ errors: "Doctor not found" });
@@ -80,10 +72,7 @@ const postRecord = async (req, res) => {
 
 const patchRecord = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    checkErrors(validationResult(req), res);
 
     if (!(await checkDoctorExists(req.body.doctor))) {
       return res.status(404).json({ errors: "Doctor not found" });
@@ -100,10 +89,7 @@ const patchRecord = async (req, res) => {
 
 const deleteRecords = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    checkErrors(validationResult(req), res);
 
     const deletedRecords = await deleteAllRecords();
 
@@ -117,10 +103,7 @@ const deleteRecords = async (req, res) => {
 
 const deleteRecord = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    checkErrors(validationResult(req), res);
 
     const deletedRecord = await deleteRecordById(req.params.id);
 
