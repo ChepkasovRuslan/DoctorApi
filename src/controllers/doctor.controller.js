@@ -11,6 +11,11 @@ const { logError } = require("../services/logger.service");
 
 const getDoctors = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const doctors = await getAllDoctors();
 
     res.status(200).send(doctors);
