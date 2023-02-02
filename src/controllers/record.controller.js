@@ -124,7 +124,7 @@ const deleteRecord = async (req, res) => {
     const deletedRecord = await deleteRecordById(req.params.id);
 
     if (deletedRecord) res.status(202).send(deletedRecord);
-    else res.status(404).json({ msg: "Doctor not found" });
+    else res.status(404).json({ msg: "Record not found" });
   } catch (error) {
     res.status(500).json({ msg: "Internal server error" });
     logError(error.message);
