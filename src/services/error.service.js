@@ -1,11 +1,14 @@
-const checkErrors = (errors, res) => {
+const { logError } = require("./logger.service");
+const checkErrors = (errors) => {
   if (!errors.isEmpty()) {
     if (errors.array().some((e) => e.location === "headers")) {
-      return res.status(401).json({ msg: "Unauthorized" });
+      return 401;
     }
 
-    return res.status(400).json({ errors: errors.array() });
+    logError(errors);
+    return 400;
   }
+  return null;
 };
 
 module.exports = {

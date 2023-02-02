@@ -11,16 +11,13 @@ const { logError } = require("../services/logger.service");
 const { checkErrors } = require("../services/error.service");
 
 const getDoctors = async (req, res) => {
-  try {
-    checkErrors(validationResult(req), res);
-
-    const doctors = await getAllDoctors();
-
-    res.status(200).send(doctors);
-  } catch (error) {
-    res.status(500).json({ msg: "Internal server error" });
-    logError(error.message);
+  if (checkErrors(validationResult(req)) === 401) {
+    res.status(401).send({ msg: "Unauthorized" });
+    return;
   }
+
+  const doctors = await getAllDoctors();
+  res.status(200).send(doctors);
 };
 
 const getDoctor = async (req, res) => {
