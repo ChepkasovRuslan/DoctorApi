@@ -22,7 +22,8 @@ const getRecords = async (req, res) => {
     const records = await getAllRecords(
       req.query.pageSize,
       req.query.page,
-      req.query.sort
+      req.query.sort,
+      req.query.direction
     );
     const total = await countRecords();
 
@@ -47,7 +48,6 @@ const getRecord = async (req, res) => {
     }
 
     const record = await getRecordById(req.params.id);
-    console.log(record);
 
     if (record) res.status(200).send(record);
     else res.status(404).json({ msg: "Record not found" });
