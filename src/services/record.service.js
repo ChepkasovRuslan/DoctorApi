@@ -1,15 +1,14 @@
 const Record = require("../models/record");
 const Doctor = require("../models/doctor");
 
-const getAllRecords = async (pageSize, page, sortField) =>
+const getAllRecords = async (pageSize, page) =>
   await Record.find()
     .populate({
       path: "doctor",
       model: Doctor,
     })
     .limit(pageSize)
-    .skip((page - 1) * pageSize)
-    .sort(sortField);
+    .skip((page - 1) * pageSize);
 
 const countRecords = async () => await Record.count();
 

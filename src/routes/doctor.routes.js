@@ -3,10 +3,13 @@ const doctorCtrl = require("../controllers/doctor.controller");
 const {
   doctorValidation,
 } = require("../middlewares/validators/doctor.validation");
+const {
+  accessTokenValidation,
+} = require("../middlewares/validators/token.validation");
 
 const doctorRouter = express.Router();
 
-doctorRouter.get("/doctors", doctorCtrl.getDoctors);
+doctorRouter.get("/doctors", accessTokenValidation, doctorCtrl.getDoctors);
 doctorRouter.get("/doctor/:id", doctorCtrl.getDoctor);
 doctorRouter.post("/doctor", doctorValidation, doctorCtrl.postDoctor);
 doctorRouter.patch("/doctor/:id", doctorValidation, doctorCtrl.patchDoctor);

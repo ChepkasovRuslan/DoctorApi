@@ -10,20 +10,19 @@ const {
 const { checkDoctorExists } = require("../services/doctor.service");
 const { validationResult } = require("express-validator");
 const { logError } = require("../services/logger.service");
+const { checkErrors } = require("../services/error.service");
 
 const getRecords = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    if (checkErrors(validationResult(req)) === 401) {
+      res.status(401).send({ msg: "Unauthorized" });
+      return;
     }
 
     const records = await getAllRecords(
       req.query.pageSize,
       req.query.page,
-      req.query.sort,
-      req.query.startDate,
-      req.query.endDate
+      req.query.sort
     );
     const total = await countRecords();
 
@@ -42,13 +41,12 @@ const getRecords = async (req, res) => {
 
 const getRecord = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    if (checkErrors(validationResult(req)) === 401) {
+      res.status(401).send({ msg: "Unauthorized" });
+      return;
     }
 
     const record = await getRecordById(req.params.id);
-    console.log(record);
 
     if (record) res.status(200).send(record);
     else res.status(404).json({ msg: "Record not found" });
@@ -60,9 +58,9 @@ const getRecord = async (req, res) => {
 
 const postRecord = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    if (checkErrors(validationResult(req)) === 401) {
+      res.status(401).send({ msg: "Unauthorized" });
+      return;
     }
 
     if (!(await checkDoctorExists(req.body.doctor))) {
@@ -80,9 +78,9 @@ const postRecord = async (req, res) => {
 
 const patchRecord = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    if (checkErrors(validationResult(req)) === 401) {
+      res.status(401).send({ msg: "Unauthorized" });
+      return;
     }
 
     if (!(await checkDoctorExists(req.body.doctor))) {
@@ -100,9 +98,9 @@ const patchRecord = async (req, res) => {
 
 const deleteRecords = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    if (checkErrors(validationResult(req)) === 401) {
+      res.status(401).send({ msg: "Unauthorized" });
+      return;
     }
 
     const deletedRecords = await deleteAllRecords();
@@ -117,15 +115,15 @@ const deleteRecords = async (req, res) => {
 
 const deleteRecord = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    if (checkErrors(validationResult(req)) === 401) {
+      res.status(401).send({ msg: "Unauthorized" });
+      return;
     }
 
     const deletedRecord = await deleteRecordById(req.params.id);
 
     if (deletedRecord) res.status(202).send(deletedRecord);
-    else res.status(404).json({ msg: "Doctor not found" });
+    else res.status(404).json({ msg: "Record not found" });
   } catch (error) {
     res.status(500).json({ msg: "Internal server error" });
     logError(error.message);
