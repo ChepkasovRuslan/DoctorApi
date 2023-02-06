@@ -12,7 +12,7 @@ const recordSchema = new Schema({
     required: true,
   },
   receptionDate: {
-    type: String,
+    type: Date,
     required: true,
   },
   complaints: {
