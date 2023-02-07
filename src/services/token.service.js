@@ -3,10 +3,10 @@ const { JWT_SECRET_KEY } = require("../../config");
 
 const generateTokens = (id) => {
   const accessToken = jwt.sign({ id: id }, JWT_SECRET_KEY, {
-    expiresIn: 60 * 60 * 10, // 10 min
+    expiresIn: 120,
   });
   const refreshToken = jwt.sign({ id: id }, JWT_SECRET_KEY, {
-    expiresIn: 60 * 60 * 15, // 15 min
+    expiresIn: 60 * 60 * 15,
   });
 
   return { accessToken: accessToken, refreshToken: refreshToken };

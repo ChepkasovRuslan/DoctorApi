@@ -22,6 +22,7 @@ const registerNewUser = async (req, res) => {
 
     const tokens = generateTokens(user.id);
     res.status(201).json({
+      login: req.body.login,
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
     });

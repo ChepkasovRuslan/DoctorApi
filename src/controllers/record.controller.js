@@ -23,7 +23,9 @@ const getRecords = async (req, res) => {
       req.query.pageSize,
       req.query.page,
       req.query.sort,
-      req.query.sortDirection
+      req.query.sortDirection,
+      req.query.fromDate,
+      req.query.toDate
     );
     const total = await countRecords();
 

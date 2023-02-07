@@ -1,8 +1,61 @@
 const Record = require("../models/record");
 const Doctor = require("../models/doctor");
 
-const getAllRecords = async (pageSize, page, sortOption, sortDirection) =>
-  await Record.find()
+const getAllRecords = async (
+  pageSize,
+  page,
+  sortOption,
+  sortDirection,
+  fromDate,
+  toDate
+) => {
+  if (fromDate && toDate) {
+    return Record.find({
+      receptionDate: {
+        $gte: new Date(fromDate),
+        $lt: new Date(toDate),
+      },
+    })
+      .populate({
+        path: "doctor",
+        model: Doctor,
+      })
+      .sort([[sortOption, sortDirection]])
+      .limit(pageSize)
+      .skip((page - 1) * pageSize);
+  }
+
+  if (fromDate) {
+    return Record.find({
+      receptionDate: {
+        $gte: new Date(fromDate),
+      },
+    })
+      .populate({
+        path: "doctor",
+        model: Doctor,
+      })
+      .sort([[sortOption, sortDirection]])
+      .limit(pageSize)
+      .skip((page - 1) * pageSize);
+  }
+
+  if (toDate) {
+    return Record.find({
+      receptionDate: {
+        $lt: new Date(toDate),
+      },
+    })
+      .populate({
+        path: "doctor",
+        model: Doctor,
+      })
+      .sort([[sortOption, sortDirection]])
+      .limit(pageSize)
+      .skip((page - 1) * pageSize);
+  }
+
+  return Record.find()
     .populate({
       path: "doctor",
       model: Doctor,
@@ -10,6 +63,7 @@ const getAllRecords = async (pageSize, page, sortOption, sortDirection) =>
     .sort([[sortOption, sortDirection]])
     .limit(pageSize)
     .skip((page - 1) * pageSize);
+};
 
 const countRecords = async () => await Record.count();
 
